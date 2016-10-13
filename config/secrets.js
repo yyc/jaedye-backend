@@ -34,8 +34,8 @@ if(publicKey && privateKey){
 
 module.exports = {
   facebook: {
-    appId: process.env.FACEBOOK_ID || "FBIDHere",
-    appSecret: process.env.FACEBOOK_SECRET || "FBSecretHere"
+    clientID: process.env.FACEBOOK_ID || "FBIDHere",
+    clientSecret: process.env.FACEBOOK_SECRET || "FBSecretHere"
   },
   google: {
     clientID: process.env.GOOGLE_ID || "GOOGIDHere",
