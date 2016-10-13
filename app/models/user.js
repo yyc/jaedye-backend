@@ -13,7 +13,7 @@ module.exports = function(sequelize, DataTypes) {
       }
     }
   });
-  User.prototype.getJSON(){
+  User.Instance.prototype.getJSON = function(){
     return {
       id: this.getDataValue('id'),
       name: this.getDataValue('name'),
