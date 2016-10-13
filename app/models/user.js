@@ -13,5 +13,12 @@ module.exports = function(sequelize, DataTypes) {
       }
     }
   });
+  User.prototype.getJSON(){
+    return {
+      id: this.getDataValue('id'),
+      name: this.getDataValue('name'),
+      email: this.getDataValue('email')
+    };
+  }
   return User;
 };
