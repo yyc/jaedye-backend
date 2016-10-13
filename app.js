@@ -10,9 +10,8 @@ var routes = require('./app/routes/index');
 var app = express();
 
 var db = require('./app/models');
-var globals = {
-  db
-};
+var globals = {db};
+require('./config/passport')(globals);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

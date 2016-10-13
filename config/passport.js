@@ -1,8 +1,13 @@
 var passport = require('passport');
 
-module.exports = function(db){
-  var jwt = require('./jwt')(db);
+module.exports = function(globals){
+  var jwt = require('./jwt')(globals);
+  var facebook = require('./facebook')(globals);
   // Define JWT strategy
   passport.use(jwt.strategy);
-  return passport;
+  passport.use(facebook);
+  return Object.assign(globals,{
+    jsonwebtoken: jwt.jsonwebtoken,
+    passport
+  });
 }
