@@ -124,55 +124,93 @@ paths:
           in: body
           description: User ID of Friend to add
           required: true
-          type: integer
-          format: int32
+          schema:
+            type: integer
+            format: int32
       responses:
         200:
           description: Friend Added
           schema:
             type: integer
-            # $ref: '#/definitions/User'
         default:
           description: unexpected error
           schema:
             $ref: '#/definitions/Error'
   /users/{id}:
     get:
-      description: Returns a user based on a single ID, if the user does not have access to the Attempt
-      operationId: find Attempt by id
+      description: Returns the user with the given ID
+      operationId: find User by id
       parameters:
         - name: id
           in: path
-          description: ID of Attempt to fetch
+          description: ID of User to fetch
           required: true
           type: integer
           format: int64
       responses:
         200:
-          description: Attempt response
+          description: User response
           schema:
-            $ref: '#/definitions/Attempt'
+            $ref: '#/definitions/UserProfile'
         default:
           description: unexpected error
           schema:
             $ref: '#/definitions/Error'
-    delete:
-      description: deletes a single Attempt based on the ID supplied
+  /attempts:
+    get:
+      description: Gets the users' recent list of attempts
       operationId: deletePet
       parameters:
-        - name: id
-          in: path
-          description: ID of Attempt to delete
-          required: true
+        - name: limit
+          in: query
+          description: maximum number of results to return
+          required: false
           type: integer
-          format: int64
+          format: int32
+        - name: offset
+          in: query
+          description: offset of results to return
+          required: false
+          type: integer
+          format: int32
       responses:
-        204:
+        200:
           description: Attempt deleted
         default:
           description: unexpected error
           schema:
             $ref: '#/definitions/Error'
+    post:
+      description: Sends and stores a new attempt
+      operationId: createAttempt
+      parameters:
+        - name: attempt
+          in: body
+          description: new Attempt object
+          required: true
+          schema:
+            $ref: '#/definitions/NewAttempt'
+      responses:
+        201:
+          description: Attempt created
+          schema:
+            type: integer
+            format: int32
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /challenges:
+    get:
+      description: Gets the list of available challenges
+      operationId: getChallenges
+      responses:
+        200:
+          description: List of challenges
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Challenge'
 definitions:
   UserProfile:
     allOf:
@@ -225,6 +263,20 @@ definitions:
       actualTime:
         type: integer
         description: Actual time spent focused (in seconds)
+  Challenge:
+    required:
+      - name
+      - endDate
+      - description
+    properties:
+      name:
+        type: string
+      description:
+        type: string
+      endDate:
+        type: string
+        format: datetime
+        description: Date/Time at which the challenge will end
   Error:
     required:
       - code
