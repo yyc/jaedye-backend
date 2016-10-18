@@ -3,6 +3,7 @@ var router = express.Router();
 
 module.exports = function(globals){
   var db = globals.db;
+  // GET /api/attempts -- Fetch all attempts for current user
   router.get('/', function(req, res, next){
     req.user.model
     .then((user) => user.getAttempts({limit: req.query.limit, offset: req.query.offset}))
