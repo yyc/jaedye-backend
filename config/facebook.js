@@ -1,7 +1,8 @@
 var secrets = require('../config/secrets.js');
 var FacebookStrategy = require('passport-facebook-token');
 
-module.exports = function(db){
+module.exports = function(globals){
+  var db = globals.db;
   return new FacebookStrategy({
     clientID: secrets.facebook.clientID,
     clientSecret: secrets.facebook.clientSecret,
