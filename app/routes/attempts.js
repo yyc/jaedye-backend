@@ -8,8 +8,20 @@ module.exports = function(globals){
     req.user.model
     .then((user) => user.getAttempts({limit: req.query.limit, offset: req.query.offset}))
     .then(function(attempts){
-      res.json(attempts.map((attempt) => attempt.getDataValues(), attempts));
+      res.json(attempts.map((attempt) => attempt.dataValues, attempts));
     });
   });
+  router.post('/', function(req, res, next){
+    var newObj = {
+      startTime: req.body.startTime,
+      actualTime: req.body.actualTime,
+      targetTime: req.body.targetTime,
+      UserId: req.user.id
+    };
+    db.Attempt.create(newObj)
+    .then(function(newAttempt){
+      res.end(newAttempt.id + '');
+    })
+  })
   return router;
 }
