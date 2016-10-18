@@ -8,10 +8,10 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      user: {
+      UserId: {
         type: Sequelize.INTEGER
       },
-      goalTime: {
+      targetTime: {
         type: Sequelize.INTEGER
       },
       actualTime: {

@@ -1,8 +1,8 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
   var Attempt = sequelize.define('Attempt', {
-    user: DataTypes.INTEGER,
-    goalTime: DataTypes.INTEGER,
+    UserId: DataTypes.INTEGER,
+    targetTime: DataTypes.INTEGER,
     actualTime: DataTypes.INTEGER,
     startTime: DataTypes.DATE
   }, {
