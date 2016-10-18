@@ -23,6 +23,9 @@ module.exports = {
       providerToken: {
         type: Sequelize.STRING
       },
+      picture: {
+        type: Sequelize.STRING
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
