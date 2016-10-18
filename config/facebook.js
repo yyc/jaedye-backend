@@ -9,6 +9,7 @@ module.exports = function(globals){
     callbackURL: secrets.url + '/auth/facebook/',
     profileFields: ['id', 'displayName', 'photos', 'email']
   }, function(accessToken, refreshToken, profile, cb){
+    var photos = profile.photos;
     db.User.findOrCreate({
         where: {
           provider: 'facebook',
@@ -21,6 +22,9 @@ module.exports = function(globals){
     .spread(function(user, wasCreated){
       user.set('providerToken', accessToken);
       user.set('name', profile.displayName);
+      if(photos && photos.length){
+        user.set('picture', photos[0].value);
+      }
       return user.save();
     })
     .then(function(user){
