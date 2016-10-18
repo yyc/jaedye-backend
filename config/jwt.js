@@ -1,3 +1,4 @@
+"use strict";
 var secrets = require('./secrets');
 
 var jsonwebtoken = require("jsonwebtoken");
