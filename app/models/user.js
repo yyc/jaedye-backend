@@ -11,6 +11,8 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         this.hasMany(models.Attempt);
+        this.hasMany(models.ChallengeUser);
+        this.belongsToMany(models.Challenge, {as: 'challenges', through: models.ChallengeUser});
       }
     }
   });
