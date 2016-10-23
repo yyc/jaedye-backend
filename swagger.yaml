@@ -211,6 +211,42 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Challenge'
+  /challenge/{id}/accept:
+    get:
+      description: declines the challenge with the given ID
+      operationId: declineChallenge
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        200:
+          description: Challenge response
+          schema:
+            $ref: '#/definitions/Challenge'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /challenge/{id}/decline:
+    get:
+      description: accepts the challenge with the given ID
+      operationId: acceptChallenge
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        200:
+          description: Challenge response
+          schema:
+            $ref: '#/definitions/Challenge'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/Error'
 definitions:
   UserProfile:
     allOf:
@@ -264,8 +300,22 @@ definitions:
         type: integer
         description: Actual time spent focused (in seconds)
   Challenge:
+    allOf:
+      - $ref: '#/definitions/NewChallenge'
+      - required: [leaderboard, accepted]
+        properties:
+          leaderboard:
+            type: array
+            items:
+              $ref: '#/definitions/UserChallenge'
+          winner:
+            $ref: '#/definitions/User'
+          accepted:
+            type: boolean
+  NewChallenge:
     required:
       - name
+      - startDate
       - endDate
       - description
     properties:
@@ -273,10 +323,28 @@ definitions:
         type: string
       description:
         type: string
+      startDate:
+        type: string
+        format: datetime
+        description: Date/Time at which the challenge will start
       endDate:
         type: string
         format: datetime
         description: Date/Time at which the challenge will end
+      people:
+        type: array
+        items:
+          type: integer
+        description: Array of user IDs to add to the challenge
+  UserChallenge:
+    required:
+      - userId
+      - time
+    properties:
+      userId:
+        type: integer
+      time:
+        type: integer
   Error:
     required:
       - code
