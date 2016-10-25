@@ -81,7 +81,18 @@ module.exports = function(globals){
   });
   // GET /api/challenges/pending -- get invited challenges
   router.get('/pending', function(req, res, next){
-
-  })
+    db.ChallengeUser
+    .findAll({
+      where:{
+        UserId: req.user.id,
+        isPending: false
+      },
+      order: ['isPending'],
+      include:[db.Challenge]
+    })
+    .then(function(challengeUsers){
+      res.json(friends.map((friend) => friend.dataValues));
+    });
+  });
   return router;
 }
