@@ -5,7 +5,7 @@ module.exports = function(globals){
   var db = globals.db;
   router.get('/', function(req, res, next){
     req.user.model
-    .then((user) => user.getFriends().where({isPending: false}))
+    .then((user) => user.getFriends({isPending: false}))
     .then(function(friends){
       res.json(friends.map((friend) => friend.dataValues));
     });
