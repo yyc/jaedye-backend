@@ -62,10 +62,10 @@ module.exports = function(globals){
       });
       return challenge.save()
       .then(function(challenge){
-        challenge.setChallengers(users, {inviter: req.user.id});
+        challenge.setChallengers(users, {inviter: req.user.id, isPending: true});
         return req.user.model
         .then(function(user){
-          challenge.addChallenger(req.user.__model, {isPending: false, });
+          challenge.addChallenger(user, {isPending: false, });
           return challenge.save();
         });
       })
@@ -85,13 +85,24 @@ module.exports = function(globals){
     .findAll({
       where:{
         UserId: req.user.id,
-        isPending: false
+        isPending: true
       },
       order: ['isPending'],
-      include:[db.Challenge]
+      include:[db.Challenge, {model: db.User, as: 'Inviter'}]
     })
     .then(function(challengeUsers){
-      res.json(friends.map((friend) => friend.dataValues));
+      res.json(challengeUsers.map(function(cu){
+        return {id: cu.ChallengeId,
+        name: cu.Challenge.name,
+        startDate: cu.Challenge.startDate,
+        endDate: cu.Challenge.endDate,
+        inviter: {
+          id: cu.Inviter.id,
+          name: cu.Inviter.name,
+          picture: cu.Inviter.picture
+          }
+        };
+      }));
     });
   });
   return router;
