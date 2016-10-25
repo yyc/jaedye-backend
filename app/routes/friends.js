@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var FB = require('fb');
 
 module.exports = function(globals){
   var db = globals.db;
@@ -9,6 +10,12 @@ module.exports = function(globals){
     .then(function(friends){
       res.json(friends.map((friend) => friend.dataValues));
     });
+  });
+  router.get('/new', function(req, res, next){
+    req.user.model
+    .then(function(user){
+
+    })
   });
   router.post('/', function(req, res, next){
     if(typeof req.body != 'number'){
@@ -59,7 +66,3 @@ module.exports = function(globals){
   });
   return router;
 }
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
