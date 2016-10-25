@@ -22,7 +22,8 @@ module.exports = function(sequelize, DataTypes) {
     return {
       id: this.getDataValue('id'),
       name: this.getDataValue('name'),
-      email: this.getDataValue('email')
+      email: this.getDataValue('email'),
+      picture: this.getDataValue('picture')
     };
   }
   return User;

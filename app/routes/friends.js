@@ -16,12 +16,12 @@ module.exports = function(globals){
       if(user.provider == 'facebook'){
         globals.fb.api(`me/friends`, {access_token: user.providerToken}, function(fbResponse){
           var friendsList = fbResponse.data.map((friend) => friend["id"]);
-          db.User.where({
+          db.User.findAll({
             provider: 'facebook',
             providerId: friendsList
           })
           .then(function(userList){
-            return userList;
+            res.json(userList.map((user) => user.getJSON()));
           });
         });
       }
