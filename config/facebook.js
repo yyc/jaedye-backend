@@ -4,6 +4,11 @@ var FB = require('fb');
 
 module.exports = function(globals){
   var db = globals.db;
+  var fb = new FB.Facebook({
+    appId: secrets.facebook.clientID,
+    appSecret: secrets.facebook.clientSecret,
+  });
+  globals.fb = fb;
   return new FacebookStrategy({
     clientID: secrets.facebook.clientID,
     clientSecret: secrets.facebook.clientSecret,
@@ -28,7 +33,7 @@ module.exports = function(globals){
       }
 
       // From https://www.npmjs.com/package/fb, exchange the short-lived access token for a long-lived one
-      FB.api('oauth/access_token', {
+      fb.api('oauth/access_token', {
           client_id: secrets.facebook.clientID,
           client_secret: secrets.facebook.clientSecret,
           grant_type: 'fb_exchange_token',
