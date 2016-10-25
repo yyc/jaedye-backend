@@ -17,8 +17,12 @@ module.exports = function(globals){
         globals.fb.api(`me/friends`, {access_token: user.providerToken}, function(fbResponse){
           var friendsList = fbResponse.data.map((friend) => friend["id"]);
           db.User.findAll({
-            provider: 'facebook',
-            providerId: friendsList
+            where: {
+              provider: 'facebook',
+              providerId: {
+                $in: friendsList
+              }
+            }
           })
           .then(function(userList){
             res.json({friends: userList.map((user) => user.getJSON())});
