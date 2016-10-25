@@ -4,26 +4,27 @@ var router = express.Router();
 module.exports = function(globals){
   var db = globals.db;
 
+  // GET /api/challenges -- get list of all current challenges
   router.get('/', function(req, res, next){
     db.ChallengeUser
     .findAll({
       where:{
-        UserId: req.user.id
+        UserId: req.user.id,
+        isPending: false
       },
       order: ['isPending'],
-      include:[db.Challenge, 'Inviter']
+      include:[db.Challenge]
     })
     req.user.model
-    .then((user) => user.getChallenges({isPending: false}))
-    .then(function(friends){
+    .then(function(challenges){
       res.json(friends.map((friend) => friend.dataValues));
     });
   });
 
   // POST /api/challenges  -- create new challenge
   router.post('/', function(req, res, next){
-    if(['name', 'startDate', 'endDate','people']
-      .reduce((result, ind) => result && (req.body[ind] != undefined)), true){
+    if(!(['name', 'startDate', 'endDate','people']
+      .reduce((result, ind) => result && (req.body[ind] != undefined), true))){
         // One or more fields are missing
         res.status(400);
         res.json({error: 'Missing field in New Challenge object'});
@@ -40,18 +41,35 @@ module.exports = function(globals){
     })
     .then(function(friendsList){
       return db.User.findAll({
-        provider: 'facebook',
-        providerId: friendsList
+        where: {
+          provider: 'facebook',
+          providerId: {
+            $in: friendsList
+          }
+        }
       })
     })
     .then(function(userList){
-      var users = userList.filter((user) => req.body.people.includes(user.id));
-      return db.Challenge.build({
+      console.log(userList);
+      var users = userList.filter((user) => {
+        // Filter out all the friends not in our list
+        console.log(req.body.people, user.id, req.body.people.includes(user.id));
+        return req.body.people.includes(user.id)});
+      var challenge = db.Challenge.build({
         name: req.body.name,
         startDate: req.body.startDate,
         endDate: req.body.endDate,
-        challengers: users
       });
+      return challenge.save()
+      .then(function(challenge){
+        challenge.setChallengers(users, {inviter: req.user.id});
+        return req.user.model
+        .then(function(user){
+          challenge.addChallenger(req.user.__model, {isPending: false, });
+          return challenge.save();
+        });
+      })
+      .catch((err) => console.log('some problem with setChallengers'));
     })
     .then(function(challenge){
       res.json(challenge);
@@ -61,5 +79,9 @@ module.exports = function(globals){
       res.json({error});
     });
   });
+  // GET /api/challenges/pending -- get invited challenges
+  router.get('/pending', function(req, res, next){
+
+  })
   return router;
 }
