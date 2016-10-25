@@ -13,6 +13,8 @@ module.exports = function(sequelize, DataTypes) {
         this.hasMany(models.Attempt);
         this.hasMany(models.ChallengeUser);
         this.belongsToMany(models.Challenge, {as: 'challenges', through: models.ChallengeUser});
+        this.belongsToMany(models.User, {as: 'Friends', through: models.Friendship,
+          foreignKey: 'UserId', otherKey: 'friendTo'});
       }
     }
   });
