@@ -21,7 +21,7 @@ module.exports = function(globals){
             providerId: friendsList
           })
           .then(function(userList){
-            res.json(userList.map((user) => user.getJSON()));
+            res.json({friends: userList.map((user) => user.getJSON())});
           });
         });
       }
