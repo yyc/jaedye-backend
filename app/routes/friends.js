@@ -1,6 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var FB = require('fb');
 
 module.exports = function(globals){
   var db = globals.db;
@@ -14,7 +13,12 @@ module.exports = function(globals){
   router.get('/new', function(req, res, next){
     req.user.model
     .then(function(user){
-
+      if(user.provider == 'facebook'){
+        globals.fb.api(`${user.providerId}/friends`, {access_token: user.providerToken},
+           function(fbResponse){
+          res.json(fbResponse);
+        });
+      }
     })
   });
   router.post('/', function(req, res, next){
