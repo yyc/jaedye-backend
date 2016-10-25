@@ -14,9 +14,15 @@ module.exports = function(globals){
     req.user.model
     .then(function(user){
       if(user.provider == 'facebook'){
-        globals.fb.api(`${user.providerId}/friends`, {access_token: user.providerToken},
-           function(fbResponse){
-          res.json(fbResponse);
+        globals.fb.api(`me/friends`, {access_token: user.providerToken}, function(fbResponse){
+          var friendsList = fbResponse.data.map((friend) => friend["id"]);
+          db.User.where({
+            provider: 'facebook',
+            providerId: friendsList
+          })
+          .then(function(userList){
+            return userList;
+          });
         });
       }
     })
