@@ -3,7 +3,7 @@ module.exports = function(sequelize, DataTypes) {
   var Challenge = sequelize.define('Challenge', {
     name: DataTypes.STRING,
     startDate: DataTypes.DATE,
-    endDate: DataTypes.DATE,
+    duration: DataTypes.INTEGER,
     description: DataTypes.STRING
   }, {
     classMethods: {

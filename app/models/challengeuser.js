@@ -11,7 +11,6 @@ module.exports = function(sequelize, DataTypes) {
       associate: function(models) {
         this.belongsTo(models.User);
         this.belongsTo(models.Challenge);
-        this.belongsTo(models.User, {as: 'Inviter', foreignKey: 'inviter'});
       }
     }
   });
