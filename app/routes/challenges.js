@@ -20,7 +20,7 @@ module.exports = function(globals){
           name: cu.Challenge.name,
           startDate: cu.Challenge.startDate,
           endDate: cu.Challenge.endDate,
-          isPending: cu.isPending,
+          accepted: !cu.isPending,
           inviter: cu.Inviter ? {
             id: cu.Inviter.id,
             name: cu.Inviter.name,
