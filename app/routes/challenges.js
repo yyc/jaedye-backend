@@ -83,10 +83,10 @@ module.exports = function(globals){
     .then(function(challenge){
       res.json(challenge);
     })
-    // .catch(function(error){
-    //   res.status(400);
-    //   res.json({error});
-    // });
+    .catch(function(error){
+      res.status(400);
+      res.json({error});
+    });
   });
   // GET /api/challenges/pending -- get invited challenges
   router.get('/pending', function(req, res, next){
