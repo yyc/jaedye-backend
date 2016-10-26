@@ -115,5 +115,71 @@ module.exports = function(globals){
       }));
     });
   });
+  // POST /api/challenges/:id/accept -- accept challenge
+  router.post('/:id/accept', function(req, res, next){
+    req.params.id = Number(req.params.id);
+    if(typeof req.params.id != 'number'){
+      res.status(400);
+      res.json({error: 'Challenge ID is not a number'});
+      return;
+    }
+    db.ChallengeUser.findOne({
+      where:{
+        ChallengeId: req.params.id,
+        UserId: req.user.id
+      },
+      include: [db.Challenge]
+    })
+    .then(function(cu){
+      if(cu == null){
+        res.status(404);
+        res.json({error: 'Challenge not found for current user'});
+      } else{
+        if(cu.getDataValue("isPending")){
+          cu.setDataValue('isPending', false);
+          return cu.save();
+        } else{
+          res.status(304);
+        }
+      }
+    })
+    .then(function(cu){
+      if(cu){
+        res.json(cu.Challenge);
+      } else{
+        res.end();
+      }
+    });
+  });
+  // POST /api/chalenges/:id/decline -- decline/quit challenge
+  router.post('/:id/decline', function(req, res, next){
+    req.params.id = Number(req.params.id);
+    if(typeof req.params.id != 'number'){
+      res.status(400);
+      res.json({error: 'Challenge ID is not a number'});
+      return;
+    }
+    db.ChallengeUser.findOne({
+      where:{
+        ChallengeId: req.params.id,
+        UserId: req.user.id
+      },
+      include: [db.Challenge]
+    })
+    .then(function(cu){
+      if(cu == null){
+        res.status(404);
+        res.json({error: 'Challenge not found for current user'});
+      } else{
+        if(cu.getDataValue("isPending")){
+          res.json({message: "Challenge declined."});
+          return cu.destroy();
+        } else{
+          res.json({message: "Challenge successfully exited."});
+          return cu.destroy();
+        }
+      }
+    })
+  });
   return router;
 }
