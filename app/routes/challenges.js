@@ -10,14 +10,24 @@ module.exports = function(globals){
     .findAll({
       where:{
         UserId: req.user.id,
-        isPending: false
       },
       order: ['isPending'],
-      include:[db.Challenge]
+      include:[db.Challenge, {model: db.User, as: 'Inviter'}]
     })
-    req.user.model
-    .then(function(challenges){
-      res.json(friends.map((friend) => friend.dataValues));
+    .then(function(challengeUsers){
+      res.json(challengeUsers.map(function(cu){
+        return {id: cu.ChallengeId,
+          name: cu.Challenge.name,
+          startDate: cu.Challenge.startDate,
+          endDate: cu.Challenge.endDate,
+          isPending: cu.isPending,
+          inviter: cu.Inviter ? {
+            id: cu.Inviter.id,
+            name: cu.Inviter.name,
+            picture: cu.Inviter.picture
+          }: null
+        };
+      }));
     });
   });
 
