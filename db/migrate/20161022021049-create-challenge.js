@@ -14,8 +14,8 @@ module.exports = {
       startDate: {
         type: Sequelize.DATE
       },
-      duration: {
-        type: Sequelize.INTEGER
+      endDate: {
+        type: Sequelize.DATE
       },
       description: {
         type: Sequelize.STRING
