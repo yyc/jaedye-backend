@@ -15,13 +15,10 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       time: {
-        type: Sequelize.INTEGER,
-        defaultValue: 0,
-        allowNull: false
+        type: Sequelize.INTEGER
       },
       isPending: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: true
+        type: Sequelize.BOOLEAN
       },
       inviter:{
         type: Sequelize.INTEGER
