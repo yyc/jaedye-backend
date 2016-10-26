@@ -15,7 +15,7 @@ module.exports = function(globals){
       include:[db.Challenge, {model: db.User, as: 'Inviter'}]
     })
     .then(function(challengeUsers){
-      res.json(challengeUsers.map(function(cu){
+      res.json({challenges: challengeUsers.map(function(cu){
         return {id: cu.ChallengeId,
           name: cu.Challenge.name,
           startDate: cu.Challenge.startDate,
@@ -27,7 +27,7 @@ module.exports = function(globals){
             picture: cu.Inviter.picture
           }: null
         };
-      }));
+      })});
     });
   });
 
@@ -60,7 +60,6 @@ module.exports = function(globals){
       })
     })
     .then(function(userList){
-      console.log(userList);
       var users = userList.filter((user) => {
         // Filter out all the friends not in our list
         console.log(req.body.people, user.id, req.body.people.includes(user.id));
@@ -84,10 +83,10 @@ module.exports = function(globals){
     .then(function(challenge){
       res.json(challenge);
     })
-    .catch(function(error){
-      res.status(400);
-      res.json({error});
-    });
+    // .catch(function(error){
+    //   res.status(400);
+    //   res.json({error});
+    // });
   });
   // GET /api/challenges/pending -- get invited challenges
   router.get('/pending', function(req, res, next){
