@@ -100,7 +100,7 @@ module.exports = function(globals){
       include:[db.Challenge, {model: db.User, as: 'Inviter'}]
     })
     .then(function(challengeUsers){
-      res.json(challengeUsers.map(function(cu){
+      res.json({challenges: challengeUsers.map(function(cu){
         return {id: cu.ChallengeId,
         name: cu.Challenge.name,
         startDate: cu.Challenge.startDate,
@@ -111,7 +111,7 @@ module.exports = function(globals){
           picture: cu.Inviter.picture
           }
         };
-      }));
+      })});
     });
   });
   // POST /api/challenges/:id/accept -- accept challenge
