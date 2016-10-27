@@ -24,7 +24,8 @@ module.exports = function(globals){
           inviter: cu.Inviter ? {
             id: cu.Inviter.id,
             name: cu.Inviter.name,
-            picture: cu.Inviter.picture
+            picture: cu.Inviter.picture,
+            email: cu.Inviter.email
           }: null
         };
       })});
@@ -108,7 +109,8 @@ module.exports = function(globals){
         inviter: {
           id: cu.Inviter.id,
           name: cu.Inviter.name,
-          picture: cu.Inviter.picture
+          picture: cu.Inviter.picture,
+          email: cu.Inviter.email
           }
         };
       })});
