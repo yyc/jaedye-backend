@@ -114,6 +114,51 @@ module.exports = function(globals){
       })});
     });
   });
+
+  // GET /api/challenges/:id -- Get challenge info
+  router.get('/:id', function(req, res, next){
+    req.params.id = Number(req.params.id);
+    if(typeof req.params.id != 'number'){
+      res.status(400);
+      res.json({error: 'Challenge ID is not a number'});
+      return;
+    }
+    db.ChallengeUser.findOne({
+      where:{
+        ChallengeId: req.params.id,
+        UserId: req.user.id
+      },
+      include: [db.Challenge]
+    })
+    .then(function(cu){
+      if(cu == null){
+        res.status(404);
+        res.json({error: 'Challenge not found for current user'});
+      } else{
+        return Promise.all([Promise.resolve(cu.Challenge), cu.Challenge.getChallengeUsers({
+          include: [db.User],
+          order: [['time', 'DESC']]
+        })]);
+      }
+    })
+    .spread(function(challenge, challengeUsers){
+      res.json({id: challenge.id,
+        name: challenge.name,
+        startDate: challenge.startDate,
+        endDate: challenge.endDate,
+        leaderboard: challengeUsers.map(function(cu){
+          return {
+              id: cu.User.id,
+              name: cu.User.name,
+              email: cu.User.email,
+              picture: cu.User.picture,
+              duration: cu.time
+            };
+        }),
+      })
+    });
+  });
+
   // POST /api/challenges/:id/accept -- accept challenge
   router.post('/:id/accept', function(req, res, next){
     req.params.id = Number(req.params.id);
