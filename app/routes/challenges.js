@@ -12,7 +12,9 @@ module.exports = function(globals){
         UserId: req.user.id,
       },
       order: ['isPending'],
-      include:[db.Challenge, {model: db.User, as: 'Inviter'}]
+      include:[{model: db.Challenge, include: [{model: db.ChallengeUser, as: 'ChallengeUsers', include: [db.User]}],
+       order:[db.ChallengeUser, 'time']},
+       {model: db.User, as: 'Inviter'}]
     })
     .then(function(challengeUsers){
       res.json({challenges: challengeUsers.map(function(cu){
@@ -26,7 +28,11 @@ module.exports = function(globals){
             name: cu.Inviter.name,
             picture: cu.Inviter.picture,
             email: cu.Inviter.email
-          }: null
+          }: null,
+          challengers: cu.Challenge.ChallengeUsers.map(function(cu){
+            return {picture: cu.User.picture.replace("?type=large","") + "?type=small",
+                    time: cu.time};
+          })
         };
       })});
     });
