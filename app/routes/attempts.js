@@ -12,8 +12,8 @@ module.exports = function(globals){
     });
   });
   router.post('/', function(req, res, next){
-    if(['startTime', 'actualTime', 'targetTime']
-      .reduce((result, ind) => result && (req.body[ind] != undefined)), true){
+    if(!(['startTime', 'actualTime', 'targetTime']
+      .reduce((result, ind) => result && (req.body[ind] != undefined), true))){
         // One or more fields are missing
         res.status(400);
         res.json({error: 'Missing field in New Attempt object'});
