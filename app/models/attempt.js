@@ -12,5 +12,8 @@ module.exports = function(sequelize, DataTypes) {
       }
     }
   });
+  Attempt.Instance.prototype.getEndTime = function(){
+    return new Date(this.getDataValue("startTime").getTime() + this.getDataValue("actualTime")*60000);
+  }
   return Attempt;
 };

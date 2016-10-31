@@ -15,6 +15,17 @@ module.exports = function(sequelize, DataTypes) {
         this.belongsToMany(models.Challenge, {as: 'challenges', through: models.ChallengeUser});
         this.belongsToMany(models.User, {as: 'Friends', through: models.Friendship,
           foreignKey: 'UserId', otherKey: 'friendTo'});
+        User.Instance.prototype.getActiveChallengesForAttempt = function(attempt){
+          return this.getChallengeUsers({
+            include: [{
+                model: models.Challenge,
+                where: {
+                  startDate: { $lt: attempt.getEndTime() },
+                  endDate: { $gt: attempt.getDataValue("startTime") }
+                }
+            }]
+          });
+        };
       }
     }
   });
@@ -25,6 +36,6 @@ module.exports = function(sequelize, DataTypes) {
       email: this.getDataValue('email'),
       picture: this.getDataValue('picture')
     };
-  }
+  };
   return User;
 };
