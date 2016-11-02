@@ -31,7 +31,7 @@ module.exports = function(globals){
           }: null,
           challengers: cu.Challenge.ChallengeUsers.map(function(cu){
             return {picture: cu.User.picture.replace("?type=large","") + "?type=small",
-                    time: cu.time};
+                    duration: cu.time};
           })
         };
       })});
