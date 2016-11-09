@@ -31,6 +31,41 @@ module.exports = function(globals){
       }
     })
   });
+
+
+  router.get('/leaderboard', function(req, res, next){
+    var date = new Date();
+    req.user.model
+    .then(function(user){
+      if(user.provider == 'facebook'){
+        globals.fb.api(`me/friends`, {access_token: user.providerToken}, function(fbResponse){
+          var friendsList = fbResponse.data.map((friend) => friend["id"]);
+          db.User.findAll({
+            where: {
+              provider: 'facebook',
+              providerId: {
+                $in: friendsList
+              }
+            },
+            include: {
+              model: db.Attempt,
+              where: {
+                startTime : {
+                  $gt: date.setDate(date.getDate() - 1)
+                }
+              }
+            }
+          })
+          .then(function(userList){
+            res.json({friends: userList.map((user) => {
+              var duration = user.Attempts.reduce((total, attempt) => total + attempt.getDataValue('actualTime'), 0);
+              return Object.assign(user.getJSON(), {duration});
+              })});
+          });
+        });
+      }
+    })
+  })
   // router.post('/', function(req, res, next){
   //   if(typeof req.body != 'number'){
   //     res.status(400);
