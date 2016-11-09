@@ -59,10 +59,13 @@ module.exports = function(globals){
             }
           })
           .then(function(userList){
-            res.json({friends: userList.map((user) => {
+            var jsonList = userList.map((user) => {
               var duration = user.Attempts.reduce((total, attempt) => total + attempt.getDataValue('actualTime'), 0);
               return Object.assign(user.getJSON(), {duration});
-              })});
+            });
+            res.json({friends: jsonList.sort((friendA, friendB) => {
+              return friendB.duration - friendA.duration;
+            })});
           });
         });
       }
