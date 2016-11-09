@@ -40,6 +40,7 @@ module.exports = function(globals){
       if(user.provider == 'facebook'){
         globals.fb.api(`me/friends`, {access_token: user.providerToken}, function(fbResponse){
           var friendsList = fbResponse.data.map((friend) => friend["id"]);
+          friendsList.push(user.providerId);
           db.User.findAll({
             where: {
               provider: 'facebook',
@@ -53,7 +54,8 @@ module.exports = function(globals){
                 startTime : {
                   $gt: date.setDate(date.getDate() - 1)
                 }
-              }
+              },
+              required: false
             }
           })
           .then(function(userList){
