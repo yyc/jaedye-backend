@@ -160,7 +160,8 @@ module.exports = function(globals){
               name: cu.User.name,
               email: cu.User.email,
               picture: cu.User.picture,
-              duration: cu.time
+              duration: cu.time,
+              pending: cu.isPending
             };
         }),
       })
