@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+  <title>Your page title here :)</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+
+  <!-- FONT
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+
+  <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/skeleton.css">
+
+  <!-- Favicon
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+
+  <style>
+    body{
+      background-color: #54ad59;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Primary Page Layout
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <div class="container">
+    <div class="row">
+      <div class="twelve column" style="">
+        <center>
+          <p><img src="focust.png" height="100px"></p>
+          <h2>Total time focused</h2>
+        </center>
+      </div>
+    </div>
+    <div class="row">
+      <div class="twelve columns" style="margin-top: 0%">
+        <center>
+        <h6>&nbsp;<span style="color:#fec107; font-weight:bold;font-size:180px;" id="time">980</span>
+          <span style="font-size:40px; margin-left:0px;">mins</span></h6>
+        </center>
+      </div>
+    </div>
+    <div class="row" style="">
+      <center><img width="100px"src="en_badge_web_generic.png"></center>
+    </div>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+  <script>
+    function updateText(){
+      $.get("/stat", function(body){
+        $("#time").html(body.total);
+      }, "json");
+    }
+    $(document).ready(function(){
+      updateText();
+      setInterval(updateText, 10000);
+    });
+  </script>
+<!-- End Document
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+</body>
+</html>
