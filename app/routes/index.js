@@ -10,6 +10,13 @@ module.exports = function(globals){
     res.render('index', { title: 'Express' });
   });
   router.use('/auth/',auth(globals));
+  router.get('/stats', function(req, res, next){
+    globals.db.Attempt.findAll()
+    .then(function(attempts){
+      var total = attempts.reduce((total, attempt) => total + attempt.actualTime, process.env.HOUR_OFFSET || 0);
+      res.json({total});
+    })
+  });
   router.use(globals.passport.authenticate('jwt', {session: false}));
   router.use('/api', api(globals));
   return router;
