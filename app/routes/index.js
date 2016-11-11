@@ -13,7 +13,7 @@ module.exports = function(globals){
   router.get('/stat', function(req, res, next){
     globals.db.Attempt.findAll()
     .then(function(attempts){
-      var total = attempts.reduce((total, attempt) => total + attempt.actualTime, process.env.HOUR_OFFSET || 0);
+      var total = attempts.reduce((total, attempt) => total + attempt.actualTime, parseInt(process.env.HOUR_OFFSET) || 0);
       res.json({total});
     })
   });
